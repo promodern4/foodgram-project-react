@@ -13,7 +13,7 @@ git clone git@github.com:promodern4/foodgram-project-react.git && cd foodgram-pr
 ```
 Перейдите в директорию /infra_dev/:
 ```
-cd backend/infra_dev/
+cd infra_dev/
 ```
 Для того, чтобы приложение могло работать с базой данных Postgres, оно должно знать необходимые данные для подключения к базе. Задайте необходимые настройки в файле .env.template и скопируйте его в файл .env:
 ```
