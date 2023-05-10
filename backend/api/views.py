@@ -3,11 +3,12 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
-from recipes.models import (Cart, Favourite, Follow, Ingredient, Recipe,
-                            RecipeIngredient, Tag)
 from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
+from recipes.models import (Cart, Favourite, Follow, Ingredient, Recipe,
+                            RecipeIngredient, Tag)
 from users.models import User
 
 from .filters import RecipeFilter
