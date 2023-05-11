@@ -191,8 +191,8 @@ class UserViewSet(UserViewSet):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             if (serializer.data.get(
-                    'current_password') == serializer.data.get(
-                                                    'new_password')):
+                    'current_password') == serializer.
+                    data.get('new_password')):
                 return Response(
                     'Новый пароль должен отличаться от текущего',
                     status=status.HTTP_400_BAD_REQUEST
