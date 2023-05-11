@@ -1,9 +1,8 @@
 from django.contrib.auth.password_validation import validate_password
 from djoser.serializers import UserCreateSerializer
 from drf_extra_fields.fields import Base64ImageField
-from rest_framework import serializers
-
 from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag
+from rest_framework import serializers
 from users.models import User
 
 # Пользователи
