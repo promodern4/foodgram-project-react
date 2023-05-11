@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'sorl.thumbnail',
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
@@ -87,7 +86,7 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('ENGINE', default='django.db.backends.postgresql'),
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DB_NAME', default='postgres'),
         'USER': os.getenv('POSTGRES_USER', default='postgres'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'postgres'),
@@ -134,7 +133,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = Path(BASE_DIR) / 'media'
 
 AUTH_USER_MODEL = 'users.User'
 
@@ -162,11 +161,12 @@ DJOSER = {
     'LOGIN_FIELD': 'email',
     'HIDE_USERS': False,
     'SERIALIZERS': {
-        'user_create': 'api.serializers.UserRegSerializer',
-        'current_user': 'api.serializers.UserSerializer'
+        'user_create': 'api.serializers.users.UserRegSerializer',
+        'current_user': 'api.serializers.users.UserSerializer'
     },
     'PERMISSIONS': {
         'user': ['rest_framework.permissions.IsAuthenticated'],
-        'user_list': ['rest_framework.permissions.AllowAny']
+        'user_list': ['rest_framework.permissions.AllowAny'],
+        'user_delete': ['api.permissions.ReadOnly']
     }
 }

@@ -12,10 +12,11 @@ from users.models import User
 
 from .filters import RecipeFilter
 from .permissions import IsAdminOwnerOrReadOnly
-from .serializers import (IngredientSerializer, PasswordSerializer,
-                          RecipeCreateSerializer, RecipeSerializer,
-                          ShortRecipeSerializer, SubscriptionsSerializer,
-                          TagSerializer, UserSerializer)
+from .serializers.recipes import (IngredientSerializer, RecipeCreateSerializer,
+                                  RecipeSerializer, ShortRecipeSerializer,
+                                  TagSerializer)
+from .serializers.users import (PasswordSerializer, SubscriptionsSerializer,
+                                UserSerializer)
 
 
 class ListRetrieveViewSet(mixins.ListModelMixin,
@@ -174,6 +175,19 @@ class UserViewSet(UserViewSet):
     queryset = User.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = UserSerializer
+    http_method_names = ('get', 'post', 'delete')
+
+    # @action(
+    #     detail=False,
+    #     methods=('get',),
+    #     permission_classes=(permissions.IsAuthenticated,)
+    # )
+    # def me(self, request):
+    #     serializer = UserSerializer(request.user)
+    #     return Response(
+    #         serializer.data,
+    #         status=status.HTTP_200_OK
+    #     )
 
     @action(
         detail=False,

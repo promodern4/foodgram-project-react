@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 
 User = get_user_model()
@@ -7,12 +7,12 @@ User = get_user_model()
 
 class Ingredient(models.Model):
     name = models.CharField(
-        max_length=100,
+        max_length=200,
         verbose_name='Название',
         help_text='Введите название ингредиента'
     )
     measurement_unit = models.CharField(
-        max_length=100,
+        max_length=200,
         verbose_name='Единица измерения'
     )
 
@@ -27,17 +27,24 @@ class Ingredient(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(
-        max_length=100,
+        max_length=200,
         verbose_name='Название тэга',
         help_text='Введите название тэга'
     )
     color = models.CharField(
         max_length=7,
+        null=True,
         verbose_name='Цвет тэга',
-        unique=True
+        unique=True,
+        validators=[
+            RegexValidator(
+                '^#([A-Fa-f0-9]{6})',
+                message='Вы ввели HEX-код некорректно'
+            )
+        ]
     )
     slug = models.SlugField(
-        max_length=50,
+        max_length=200,
         verbose_name='Указатель',
         unique=True
     )
@@ -59,7 +66,7 @@ class Recipe(models.Model):
         verbose_name='Автор',
     )
     name = models.CharField(
-        max_length=100,
+        max_length=200,
         verbose_name='Название',
         help_text='Введите название рецепта'
     )
@@ -85,6 +92,11 @@ class Recipe(models.Model):
     cooking_time = models.IntegerField(
         verbose_name='Время приготовления',
         help_text='Введите время приготовления',
+        validators=(
+            MinValueValidator(
+                1,
+                message='Время приготовления не может быть меньше 1 минуты.'),
+        )
     )
     pub_date = models.DateTimeField(
         auto_now_add=True,
@@ -114,7 +126,12 @@ class RecipeIngredient(models.Model):
     amount = models.IntegerField(
         verbose_name='Количество',
         default=1,
-        validators=(MinValueValidator(1),)
+        validators=(
+            MinValueValidator(
+                1,
+                message='Минимальное количество 1.'
+            ),
+        )
     )
 
 
