@@ -14,6 +14,9 @@ class IsAdminOwnerOrReadOnly(permissions.BasePermission):
                 or request.user.is_authenticated)
 
 
-class ReadOnly(permissions.BasePermission):
+class DenyAny(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return False
+
     def has_permission(self, request, view):
-        return request.method in permissions.SAFE_METHODS
+        return False

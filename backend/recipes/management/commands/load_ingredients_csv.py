@@ -11,7 +11,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         file_path = os.path.join(settings.DATA_FILES_PATH,
-                                 'data/ingredients.csv')
+                                 'ingredients.csv')
         with open(file_path, 'r') as file:
             reader = csv.reader(file)
             next(reader)

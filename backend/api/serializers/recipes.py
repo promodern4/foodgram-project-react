@@ -21,13 +21,23 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 class ShortRecipeSerializer(serializers.ModelSerializer):
     """Короткая сводка рецепта."""
-    image = Base64ImageField()
+    name = serializers.ReadOnlyField()
+    image = Base64ImageField(read_only=True)
+    cooking_time = serializers.ReadOnlyField()
 
     class Meta:
         model = Recipe
         fields = (
             'id', 'name', 'image', 'cooking_time'
         )
+
+    def validate(self, obj):
+        user = obj['author']
+        if user.favorite.filter(recipe=obj).exists():
+            raise serializers.ValidationError(
+                {"errors": "Рецепт уже добавлен в избранное!"}
+            )
+        return obj
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):

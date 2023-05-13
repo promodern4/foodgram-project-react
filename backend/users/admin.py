@@ -14,5 +14,5 @@ class UserAdmin(admin.ModelAdmin):
     )
     list_editable = ('password', )
     search_fields = ('username', 'email')
-    list_filter = ('email',)
+    list_filter = ('role',)
     empty_value_display = '-empty-'

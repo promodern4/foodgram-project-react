@@ -15,8 +15,7 @@ from .permissions import IsAdminOwnerOrReadOnly
 from .serializers.recipes import (IngredientSerializer, RecipeCreateSerializer,
                                   RecipeSerializer, ShortRecipeSerializer,
                                   TagSerializer)
-from .serializers.users import (PasswordSerializer, SubscriptionsSerializer,
-                                UserSerializer)
+from .serializers.users import SubscriptionsSerializer, UserSerializer
 
 
 class ListRetrieveViewSet(mixins.ListModelMixin,
@@ -54,6 +53,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
             id=pk
         )
         if request.method == 'POST':
+            # serializer = ShortRecipeSerializer(
+            #     recipe,
+            #     data=request.data,
+            # )
+            # serializer.is_valid(raise_exception=True)
             if user.favorite.filter(recipe=recipe).exists():
                 return Response(
                     {"errors": "Рецепт уже добавлен в избранное!"},
@@ -140,15 +144,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 recipe__cart__user=request.user
             ).values('ingredient').annotate(
                 amount=Sum('amount')
+            ).values_list(
+                'ingredient__name',
+                'ingredient__measurement_unit',
+                'amount'
             )
         )
         shopping_cart = 'Список продуктов:\n'
         for item in ingredients:
-            ingredient = Ingredient.objects.get(pk=item['ingredient'])
-            amount = item['amount']
             shopping_cart += (
-                f'{ingredient.name} ({ingredient.measurement_unit}) -'
-                f' {amount}\n'
+                f'{item[0]} ({item[1]}) - {item[2]}\n'
             )
         response = HttpResponse(shopping_cart, content_type="text/plain")
         response['Content-Disposition'] = (
@@ -173,52 +178,15 @@ class IngredientViewSet(ListRetrieveViewSet):
 
 class UserViewSet(UserViewSet):
     queryset = User.objects.all()
-    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = UserSerializer
-    http_method_names = ('get', 'post', 'delete')
-
-    # @action(
-    #     detail=False,
-    #     methods=('get',),
-    #     permission_classes=(permissions.IsAuthenticated,)
-    # )
-    # def me(self, request):
-    #     serializer = UserSerializer(request.user)
-    #     return Response(
-    #         serializer.data,
-    #         status=status.HTTP_200_OK
-    #     )
 
     @action(
         detail=False,
-        methods=('post',),
-        permission_classes=(permissions.IsAuthenticated,)
+        methods=('get',),
     )
-    def set_password(self, request):
-        serializer = PasswordSerializer(data=request.data)
-        user = request.user
-        if serializer.is_valid():
-            if not user.check_password(
-                    serializer.data.get('current_password')):
-                return Response(
-                    'Неправильный текущий пароль',
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            if (serializer.data.get(
-                    'current_password') == serializer.
-                    data.get('new_password')):
-                return Response(
-                    'Новый пароль должен отличаться от текущего',
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            user.set_password(
-                serializer.data.get('new_password')
-            )
-            user.save()
-            return Response({'detail': 'Пароль успешно изменен'},
-                            status=status.HTTP_204_NO_CONTENT)
-        return Response({'detail': 'Все поля обязательны!'},
-                        status=status.HTTP_400_BAD_REQUEST)
+    def me(self, request):
+        self.get_object = self.get_instance
+        return self.retrieve(request)
 
     @action(
         detail=False,
