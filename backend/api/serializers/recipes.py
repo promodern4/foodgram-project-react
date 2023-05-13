@@ -31,13 +31,13 @@ class ShortRecipeSerializer(serializers.ModelSerializer):
             'id', 'name', 'image', 'cooking_time'
         )
 
-    def validate(self, obj):
-        user = obj['author']
-        if user.favorite.filter(recipe=obj).exists():
-            raise serializers.ValidationError(
-                {"errors": "Рецепт уже добавлен в избранное!"}
-            )
-        return obj
+    # def validate(self, obj):
+    #     user = obj['']
+    #     if user.favorite.filter(recipe=obj).exists():
+    #         raise serializers.ValidationError(
+    #             {"errors": "Рецепт уже добавлен в избранное!"}
+    #         )
+    #     return obj
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
@@ -67,6 +67,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     ingredients = RecipeIngredientSerializer(many=True, source='recipe')
     author = UserSerializer(read_only=True)
     is_favorited = serializers.SerializerMethodField()
+    # is_favorited = serializers.ReadOnlyField(source='author.')
     is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:

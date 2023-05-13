@@ -1,4 +1,4 @@
-from django.contrib.auth.password_validation import validate_password
+from djoser.serializers import UserCreateSerializer
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import Recipe
 from rest_framework import serializers
@@ -33,14 +33,12 @@ class UserSerializer(serializers.ModelSerializer):
         return request.user.follower.filter(author=obj).exists()
 
 
-class PasswordSerializer(serializers.Serializer):
-    """Смена пароля."""
-    current_password = serializers.CharField(required=True)
-    new_password = serializers.CharField(required=True)
-
-    def validate_new_password(self, new_password):
-        validate_password(new_password)
-        return new_password
+class UserRegSerializer(UserCreateSerializer):
+    """Создание пользователя."""
+    class Meta(UserCreateSerializer.Meta):
+        model = User
+        fields = ('email', 'id', 'username', 'first_name',
+                  'last_name', 'password')
 
 
 class SubscriptionsSerializer(serializers.ModelSerializer):
