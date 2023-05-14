@@ -16,7 +16,7 @@ services:
       - ./.env
 
   backend:
-    # image: promodern4/foodgram:v1
+    # image: promodern4/foodgram:v2
     build:
       context: ../backend
       dockerfile: Dockerfile
