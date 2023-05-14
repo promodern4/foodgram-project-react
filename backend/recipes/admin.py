@@ -1,6 +1,12 @@
 from django.contrib import admin
 
-from .models import Cart, Favourite, Ingredient, Recipe, RecipeIngredient, Tag
+from .models import (Cart,
+                     Favourite,
+                     Follow,
+                     Ingredient,
+                     Recipe,
+                     RecipeIngredient,
+                     Tag)
 
 
 class ItemInline(admin.StackedInline):
@@ -46,6 +52,11 @@ class TagAdmin(admin.ModelAdmin):
         'name', 'slug'
     )
     empty_value_display = '-empty-'
+
+
+@admin.register(Follow)
+class FollowAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'author')
 
 
 @admin.register(Favourite)
