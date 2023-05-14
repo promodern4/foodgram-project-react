@@ -19,7 +19,7 @@ class IngredientSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'measurement_unit')
 
 
-class ShortRecipeSerializer(serializers.ModelSerializer):
+class ShortRecipeReadSerializer(serializers.Serializer):
     """Короткая сводка рецепта."""
     name = serializers.ReadOnlyField()
     image = Base64ImageField(read_only=True)
@@ -30,14 +30,6 @@ class ShortRecipeSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'image', 'cooking_time'
         )
-
-    # def validate(self, obj):
-    #     user = obj['']
-    #     if user.favorite.filter(recipe=obj).exists():
-    #         raise serializers.ValidationError(
-    #             {"errors": "Рецепт уже добавлен в избранное!"}
-    #         )
-    #     return obj
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
@@ -67,7 +59,6 @@ class RecipeSerializer(serializers.ModelSerializer):
     ingredients = RecipeIngredientSerializer(many=True, source='recipe')
     author = UserSerializer(read_only=True)
     is_favorited = serializers.SerializerMethodField()
-    # is_favorited = serializers.ReadOnlyField(source='author.')
     is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:
@@ -76,12 +67,6 @@ class RecipeSerializer(serializers.ModelSerializer):
                   'is_favorited', 'is_in_shopping_cart',
                   'name', 'image',
                   'text', 'cooking_time', 'pub_date',)
-
-    def get_is_favorited(self, obj):
-        request = self.context.get('request')
-        if not request.user.is_authenticated:
-            return False
-        return request.user.favorite.filter(recipe=obj).exists()
 
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')

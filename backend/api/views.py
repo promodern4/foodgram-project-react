@@ -13,7 +13,7 @@ from users.models import User
 from .filters import RecipeFilter
 from .permissions import IsAdminOwnerOrReadOnly
 from .serializers.recipes import (IngredientSerializer, RecipeCreateSerializer,
-                                  RecipeSerializer, ShortRecipeSerializer,
+                                  RecipeSerializer, ShortRecipeReadSerializer,
                                   TagSerializer)
 from .serializers.users import SubscriptionsSerializer, UserSerializer
 
@@ -53,20 +53,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
             id=pk
         )
         if request.method == 'POST':
-            # serializer = ShortRecipeSerializer(
-            #     recipe,
-            #     data=request.data,
-            # )
-            # serializer.is_valid(raise_exception=True)
             if user.favorite.filter(recipe=recipe).exists():
                 return Response(
-                    {"errors": "Рецепт уже добавлен в избранное!"},
+                    {"errors": "Рецепт уже добавлен в список избранного!"},
                     status=status.HTTP_400_BAD_REQUEST
                 )
             favorite_recipe = Favourite.objects.create(
                 user=user, recipe=recipe
             )
-            serializer = ShortRecipeSerializer(
+            serializer = ShortRecipeReadSerializer(
                 recipe
             )
             return Response(
@@ -76,8 +71,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if request.method == 'DELETE':
             if not user.favorite.filter(recipe=recipe).exists():
                 return Response(
-                    {"errors": "Рецепт не лежит в избранных!"},
-                    status=status.HTTP_400_BAD_REQUEST
+                    {"errors": "Рецепта нет в списке избранного!"}
                 )
             favorite_recipe = get_object_or_404(
                 Favourite,
@@ -110,7 +104,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             cart_recipe = Cart.objects.create(
                 user=user, recipe=recipe
             )
-            serializer = ShortRecipeSerializer(
+            serializer = ShortRecipeReadSerializer(
                 recipe
             )
             return Response(
