@@ -1,5 +1,5 @@
 version: '3.8'
-#
+
 volumes:
   static_value:
   media_value:
@@ -16,7 +16,7 @@ services:
       - ./.env
 
   backend:
-    image: promodern4/foodgram:v2
+    image: promodern4/foodgram:v3
     restart: always
     volumes:
       - static_value:/app/static/
@@ -24,7 +24,7 @@ services:
     depends_on:
       - db
     env_file:
-      - ./.env   
+      - ./.env
 
   frontend:
     build:
