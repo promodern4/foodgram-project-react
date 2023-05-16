@@ -3,19 +3,22 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
+from recipes.models import Cart, Favourite, Follow, Ingredient, Recipe, RecipeIngredient, Tag
 from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from users.models import User
 
 from .filters import RecipeFilter
 from .permissions import IsAdminOwnerOrReadOnly
-from recipes.models import (Cart, Favourite, Follow, Ingredient, Recipe,
-                            RecipeIngredient, Tag)
-from .serializers.recipes import (IngredientSerializer, RecipeCreateSerializer,
-                                  RecipeSerializer, ShortRecipeReadSerializer,
-                                  TagSerializer)
+from .serializers.recipes import (
+    IngredientSerializer,
+    RecipeCreateSerializer,
+    RecipeSerializer,
+    ShortRecipeReadSerializer,
+    TagSerializer,
+)
 from .serializers.users import SubscriptionsSerializer, UserSerializer
-from users.models import User
 
 
 class ListRetrieveViewSet(mixins.ListModelMixin,
