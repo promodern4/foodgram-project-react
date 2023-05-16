@@ -54,6 +54,7 @@ docker compose exec backend python manage.py dumpdata > fixtures.json
 docker compose down -v
 ```
 ### Проект на сервере
+Проект развернут на сервере с публичным IP адресом:
 ```
 51.250.84.238
 ```
