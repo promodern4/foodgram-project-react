@@ -53,5 +53,18 @@ docker compose exec backend python manage.py dumpdata > fixtures.json
 ```
 docker compose down -v
 ```
+### Проект на сервере
+```
+51.250.84.238
+```
+Данные для входа в админку
+- e-mail:
+```
+admin@mail.ru
+```
+- password:
+```
+admin
+```
 ### Примеры запросов
 Документация к API: [documentation](http://localhost/api/docs/)
