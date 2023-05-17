@@ -1,5 +1,5 @@
 version: '3.8'
-#
+
 volumes:
   static_value:
   media_value:
@@ -16,7 +16,7 @@ services:
       - ./.env
 
   backend:
-    image: promodern4/foodgram:v3
+    image: promodern4/foodgram:v3.1
     restart: always
     volumes:
       - static_value:/app/static/
@@ -36,7 +36,7 @@ services:
       - backend
 
   nginx:
-    image: nginx:1.19.3
+    image: nginx:1.21.3-alpine
     ports:
       - "80:80"
     volumes:
