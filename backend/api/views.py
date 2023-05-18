@@ -25,7 +25,6 @@ class ListRetrieveViewSet(mixins.ListModelMixin,
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    # queryset = Recipe.objects.all()
     permission_classes = (IsAdminOwnerOrReadOnly,)
     filter_backends = (DjangoFilterBackend,
                        filters.OrderingFilter)
@@ -35,16 +34,18 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        new_queryset = Recipe.objects.all().annotate(
-            is_favorited=Exists(Favourite.objects.filter(
-                user=user,
-                recipe=OuterRef("pk")
-            )),
-            is_in_shopping_cart=Exists(Cart.objects.filter(
-                user=user,
-                recipe=OuterRef("pk")
-            ))
-        )
+        if user.is_authenticated:
+            new_queryset = Recipe.objects.all().annotate(
+                is_favorited=Exists(Favourite.objects.filter(
+                    user=user,
+                    recipe=OuterRef("pk")
+                )),
+                is_in_shopping_cart=Exists(Cart.objects.filter(
+                    user=user,
+                    recipe=OuterRef("pk")
+                ))
+            )
+        new_queryset = Recipe.objects.all()
         return new_queryset
 
     def get_serializer_class(self):
