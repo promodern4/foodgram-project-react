@@ -10,7 +10,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from users.models import User
 
-from .filters import RecipeFilter
+from .filters import IngredientFilter, RecipeFilter
 from .permissions import IsAdminOwnerOrReadOnly
 from .serializers.recipes import (IngredientSerializer, RecipeCreateSerializer,
                                   RecipeSerializer, ShortRecipeReadSerializer,
@@ -184,8 +184,8 @@ class IngredientViewSet(ListRetrieveViewSet):
     serializer_class = IngredientSerializer
     pagination_class = None
     permission_classes = (permissions.AllowAny,)
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('^name',)
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = IngredientFilter
 
 
 class UserViewSet(UserViewSet):
