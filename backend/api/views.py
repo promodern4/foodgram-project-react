@@ -45,7 +45,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
                     recipe=OuterRef("pk")
                 ))
             )
-        new_queryset = Recipe.objects.all()
+        else:
+            new_queryset = Recipe.objects.all()
         return new_queryset
 
     def get_serializer_class(self):
