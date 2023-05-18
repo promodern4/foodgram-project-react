@@ -44,7 +44,7 @@ jobs:
         with:
           context: ./backend/
           push: True
-          tags: promodern4/foodgram:v3.3
+          tags: promodern4/foodgram:v3.4
 
   deploy:
     runs-on: ubuntu-latest
