@@ -46,7 +46,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 ))
             )
         else:
-            new_queryset = Recipe.objects.all()
+            new_queryset = Recipe.objects.all().annotate(
+                is_favorited=False,
+                is_in_shopping_cart=False
+            )
         return new_queryset
 
     def get_serializer_class(self):
