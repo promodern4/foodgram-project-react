@@ -68,5 +68,5 @@ admin@mail.ru
 ```
 admin
 ```
-### Примеры запросов
-Документация к API: [documentation](http://localhost/api/docs/)
+### Автор
+Полетаев Павел
